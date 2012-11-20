@@ -1,0 +1,391 @@
+{
+    "form": {
+        "id": 123456789,
+        "name": "Applicationform",
+        "season": 123456789,
+        "panel": [
+            {
+                "name": "Childinformation",
+                "field": [
+                    {
+                        "id": "lname",
+                        "name": "Lastname",
+                        "unique": "univ",
+                        "required": "true",
+                        "validation_message": "Last Name is Required !!!"
+                    },
+                    {
+                        "id": "fname",
+                        "name": "Firstname",
+                        "unique": "univ",
+                        "required": "true"
+                    },
+                    {
+                        "id": "nickname",
+                        "name": "Preferredname/nickname",
+                        "unique": "univ",
+                        "required": "true"
+                    },
+                    {
+                        "id": "gender",
+                        "name": "gender",
+                        "unique": "univ",
+                        "type": "select",
+                        "selection_list": [
+                            [
+                                "Male",
+                                "Male"
+                            ],
+                            [
+                                "Female",
+                                "Female"
+                            ]
+                        ],
+                        "lookup": "sex",
+                        "required": "true"
+                    },
+                    {
+                        "id": "birthdate",
+                        "name": "Birthdate",
+                        "unique": "univ",
+                        "type": "date",
+                        "required": "true"
+                    },
+                    {
+                        "id": "food_allergies",
+                        "name": "Foodallergies",
+                        "unique": "univ",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "medical_issues",
+                        "name": "Medicalissues",
+                        "unique": "univ",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "special_needs",
+                        "name": "Specialneeds",
+                        "unique": "univ",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "other_concerns",
+                        "name": "other_concerns",
+                        "unique": "org",
+                        "type": "textarea"
+                    }
+                ]
+            },
+            {
+                "name": "Enrollment",
+                "field": [
+                    {
+                        "id": "family_currently_enrolled",
+                        "name": "family_currently_enrolled",
+                        "unique": "seas",
+                        "type": "select",
+                        "lookup": "yesno",
+                        "selection_list": [
+                            [
+                                "Yes",
+                                "Yes"
+                            ],
+                            [
+                                "No",
+                                "No"
+                            ]
+                        ],
+                        "required": "true"
+                    },
+                    {
+                        "id": "active_member_of_ppc",
+                        "name": "active_member_of_ppc",
+                        "unique": "org",
+                        "type": "select",
+                        "selection_list": [
+                            [
+                                "Yes",
+                                "Yes"
+                            ],
+                            [
+                                "No",
+                                "No"
+                            ]
+                        ],
+                        "lookup": "yesno",
+                        "required": "true"
+                    },
+                    {
+                        "id": "age_group_and_school_days",
+                        "name": "age_group_and_school_days",
+                        "unique": "seas",
+                        "type": "select",
+                        "selection_list": [
+                            [
+                                "Two-year-oldTuesday/Thursday",
+                                "Two-year-oldTuesday/Thursday"
+                            ],
+                            [
+                                "Two-year-oldWednesday/Friday",
+                                "Two-year-oldWednesday/Friday"
+                            ],
+                            [
+                                "Three-year-oldTuesday/Thursday",
+                                "Three-year-oldTuesday/Thursday"
+                            ],
+                            [
+                                "Three-year-oldMonday/Wednesday/Friday",
+                                "Three-year-oldMonday/Wednesday/Friday"
+                            ],
+                            [
+                                "Three-year-oldMonday-Friday",
+                                "Three-year-oldMonday-Friday"
+                            ],
+                            [
+                                "Pre-KMonday/Wednesday/Friday",
+                                "Pre-KMonday/Wednesday/Friday"
+                            ],
+                            [
+                                "Pre-KMonday-Friday",
+                                "Pre-KMonday-Friday"
+                            ],
+                            [
+                                "Five/SixMonday-Friday",
+                                "Five/SixMonday-Friday"
+                            ],
+                            [
+                                "Five/SixMonday-Friday",
+                                "Five/SixMonday-Friday"
+                            ]
+                        ],
+                        "lookup": "123456789_session",
+                        "required": "true"
+                    }
+                ]
+            },
+            {
+                "name": "Parents",
+                "fieldgroup": {
+                    "multiply": "true",
+                    "multiply_default": 2,
+                    "multiply_link": "Addadditionalparents",
+                    "field": [
+                        {
+                            "id": "child_relationship",
+                            "name": "Myrelationshiptotheapplicant",
+                            "unique": "univ",
+                            "type": "select",
+                            "lookup": "relationship",
+                            "required": "trueif",
+                            "required_if": [
+                                {
+                                    "operator": "=",
+                                    "expr": 1,
+                                    "field_group_multiple_count": 0
+                                },
+                                {
+                                    "parent_lname": "nonempty"
+                                },
+                                {
+                                    "parent_fname": "nonempty"
+                                },
+                                {
+                                    "parent_email": "nonempty"
+                                },
+                                {
+                                    "parent_phone1": "nonempty"
+                                },
+                                {
+                                    "parent_phone2": "nonempty"
+                                },
+                                {
+                                    "parent_phone3": "nonempty"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "lname",
+                            "name": "Lastname",
+                            "unique": "univ",
+                            "required": "trueif",
+                            "required_if": [
+                                {
+                                    "operator": "=",
+                                    "expr": 1,
+                                    "field_group_multiple_count": 0
+                                },
+                                {
+                                    "parent_relationship": "nonempty"
+                                },
+                                {
+                                    "parent_fname": "nonempty"
+                                },
+                                {
+                                    "parent_email": "nonempty"
+                                },
+                                {
+                                    "parent_phone1": "nonempty"
+                                },
+                                {
+                                    "parent_phone2": "nonempty"
+                                },
+                                {
+                                    "parent_phone3": "nonempty"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "fname",
+                            "name": "Firstname",
+                            "unique": "univ",
+                            "required": "trueif",
+                            "required_if": [
+                                {
+                                    "operator": "=",
+                                    "expr": 1,
+                                    "field_group_multiple_count": 0
+                                },
+                                {
+                                    "parent_relationship": "nonempty"
+                                },
+                                {
+                                    "parent_lname": "nonempty"
+                                },
+                                {
+                                    "parent_email": "nonempty"
+                                },
+                                {
+                                    "parent_phone1": "nonempty"
+                                },
+                                {
+                                    "parent_phone2": "nonempty"
+                                },
+                                {
+                                    "parent_phone3": "nonempty"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "email",
+                            "name": "E-mailaddress",
+                            "unique": "univ",
+                            "required": "trueif",
+                            "required_if": [
+                                {
+                                    "operator": "=",
+                                    "expr": 1,
+                                    "field_group_multiple_count": 0
+                                },
+                                {
+                                    "parent_relationship": "nonempty"
+                                },
+                                {
+                                    "parent_lname": "nonempty"
+                                },
+                                {
+                                    "parent_fname": "nonempty"
+                                },
+                                {
+                                    "parent_phone1": "nonempty"
+                                },
+                                {
+                                    "parent_phone2": "nonempty"
+                                },
+                                {
+                                    "parent_phone3": "nonempty"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "parent_phone1",
+                            "name": "Phone number #1",
+                            "unique": "univ",
+                            "type": "phone",
+                            "required": "trueif",
+                            "required_if": [
+                                {
+                                    "operator": "=",
+                                    "expr": 1,
+                                    "field_group_multiple_count": 0
+                                },
+                                {
+                                    "parent_relationship": "nonempty"
+                                },
+                                {
+                                    "parent_lname": "nonempty"
+                                },
+                                {
+                                    "parent_fname": "nonempty"
+                                },
+                                {
+                                    "parent_email": "nonempty"
+                                },
+                                {
+                                    "parent_phone2": "nonempty"
+                                },
+                                {
+                                    "parent_phone3": "nonempty"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "parent_phone2",
+                            "name": "Phone number #2",
+                            "unique": "univ",
+                            "type": "phone",
+                            "required": "trueif",
+                            "required_if": [
+                                {
+                                    "parent_relationship": "nonempty"
+                                },
+                                {
+                                    "parent_lname": "nonempty"
+                                },
+                                {
+                                    "parent_fname": "nonempty"
+                                },
+                                {
+                                    "parent_email": "nonempty"
+                                },
+                                {
+                                    "parent_phone1": "nonempty"
+                                },
+                                {
+                                    "parent_phone3": "nonempty"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "parent_phone3",
+                            "name": "Phone number #3",
+                            "unique": "univ",
+                            "type": "phone",
+                            "required": "trueif",
+                            "required_if": [
+                                {
+                                    "parent_relationship": "nonempty"
+                                },
+                                {
+                                    "parent_lname": "nonempty"
+                                },
+                                {
+                                    "parent_fname": "nonempty"
+                                },
+                                {
+                                    "parent_email": "nonempty"
+                                },
+                                {
+                                    "parent_phone1": "nonempty"
+                                },
+                                {
+                                    "parent_phone2": "nonempty"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

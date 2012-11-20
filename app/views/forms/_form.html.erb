@@ -1,25 +1,34 @@
-<%= form_for(@form) do |f| %>
-  <% if @form.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@form.errors.count, "error") %> prohibited this form from being saved:</h2>
+=form_tag org_form_edit_organizations_path, :method => 'post' do |f|
+  %h1
+    = params[:is_new] == 'yes' ? "New Form" : "Edit Form"  
+  #dashEditForm.manageContainer
+    %p.manageExplanation Enter or edit the form below, using KidsLink-JSON convention.
+    #dashEditFormPanel.dashPanel.managePanel       
+      = params[:is_new] == 'yes' ? "<span class='panelName'> New Form</span>".html_safe : "<span class='panelName'> Edit Form</span>".html_safe      
+      = hidden_field_tag :id, params[:id]
+      = hidden_field_tag :form_id, params[:form_id]
+      = hidden_field_tag :season, params[:season]
+      = hidden_field_tag :is_new, params[:is_new]
+      %label Form name 
+      = text_field_tag :form_name, value = params[:form_name]
+      %label Form category      
+      = text_field_tag :category, value = params[:category]
+      %label Form Workflow      
+      = select_tag :workflow, options_for_select([['Normal'],['Application form'],['Auto at acceptance']])
+      %br
+      = text_area_tag :content, value = @content
+      
+      //= text_area_tag :content,value = each_content.content unless each_content.content.nil?
+      .clear
 
-      <ul>
-      <% @form.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+    = submit_tag "Save changes"
+    %a{:href => org_form_and_documents_organizations_path(:id => session[:current_org])}
+      %input{:onclick => "goBack()", :type => "reset", :value => "Cancel",:class => 'btnCancel'}            
+              
+:javascript
+  function goBack()
+  {        
+    history.go(-1);    
+  }
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :content %><br />
-    <%= f.text_area :content %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+

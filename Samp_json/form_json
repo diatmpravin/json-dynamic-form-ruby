@@ -1,0 +1,134 @@
+//= @form.inspect
+//%br
+//%br
+//= @form.keys.inspect
+//%br
+//%br
+//= @form.keys[0].inspect
+//%br
+//%br
+//= @form['form'].keys.inspect
+//%br
+//%br
+//= @form['form'].keys[0].inspect
+//%br
+//%br
+//= @form['form'].keys[3].inspect
+//%br
+//%br
+//= @form['form']['panel'].inspect
+//%br
+//%br
+=javascript_include_tag 'jquery.table.addrow.js'
+.bodyContainer
+  %h1 Apply for #{@organization.name} ( #{session[:season_year]} ) and a new KidsLink membership
+ 
+  #registrationExplanation
+    Using KidsLink, applying for #{@organization.name} is a snap.  And in the future, when you register for this organization or any other KidsLink member organization, any information you enter now will be saved and automatically copied into your future forms, saving you lots of time and effort!
+
+    %br
+    %br   
+   
+    %form.standardForm     
+      #headder_error        
+
+    = form_for @profile, :html =>{ :class => 'standardForm', :id => "profile_form", :name => "profile_form", :onSubmit => "return validate_form_fields(this);", :autocomplete => "off" } do |f|
+   
+      = hidden_field_tag :org_id, params[:id]       
+      -@form['form']['panel'].each do |each_panel|
+ 
+        .formBox
+          .formSection #{each_panel['name']}
+          -if each_panel['name'] == 'Childinformation' || each_panel['name'] == 'Parents'
+            = f.fields_for :kids_type do |kids_fields|
+
+              %br
+              -if each_panel.keys[1] == 'fieldgroup'
+                -unless each_panel['fieldgroup'].nil?
+                  = each_panel['fieldgroup']['field'] 
+                  %table{ :class => 'atable'}
+                    -@profile.parent_profiles.each_with_index do |parent,index|
+                      = f.fields_for "parent_attributes[]", parent do |parent_fields|
+        
+                        %tr
+                          %td{:class => 'table_hr'}
+                            - each_panel['fieldgroup']['field'].each do |each_field|
+                              %label #{each_field['name']}
+                              -if each_field['type'] == 'select'
+                                -if each_field['id'] == 'child_relationship'
+                                  - parent.profiles_manageds.each_with_index do |profiles_managed, index|
+                                    = parent_fields.fields_for "profiles_manageds[]", profiles_managed do | profiles_managed_fields|
+                                      =profiles_managed_fields.label :"#{each_field['id']}", "Parent relationship"
+                                      =profiles_managed_fields.select :"#{each_field['id']}", options_for_select([[''],['Father','Father'],['Mother','Mother'],['Step-father','Step-father'],['Step-mother','Step-mother'],['Grandmother','Grandmother'],['Grandfather','Grandfather'],['Other','Other']])
+
+                              -elsif each_field['type'] == 'textarea'
+                                = parent_fields.text_area :"#{each_field['id']}", :type => each_field['type']
+                              -elsif each_field['type'] == 'phone'                                
+                                - parent.phone_numbers.each_with_index do |phone_number, index|
+                                  = parent_fields.fields_for "phone_numbers[]", phone_number do | phone_number_fields|                                     
+                                    =phone_number_fields.text_field :contact, :value => "#{@parents_details.split(',')[8] unless @parents_details.nil?}"                         
+                                    =phone_number_fields.select :type, options_for_select([['Mobile','Mobile'],['Home','Home'],['Work','Work']], :selected =>"#{@parents_details.split(',')[9] unless @parents_details.nil?}")                 
+
+                              -else
+                                = parent_fields.text_field :"#{each_field['id']}", :type => each_field['type']
+                                %br
+                                %br
+
+                                %span.pointer.delRow
+
+                        - if each_panel['fieldgroup']['multiply_default'] >= 2        
+                          %tr
+                            %td{:class => 'table_hr'}
+                              - each_panel['fieldgroup']['field'].each do |each_field|
+                                %label #{each_field['name']}
+                                -if each_field['type'] == 'select'
+                                  -if each_field['id'] == 'child_relationship'
+                                    - parent.profiles_manageds.each_with_index do |profiles_managed, index|
+                                      = parent_fields.fields_for "profiles_manageds[]", profiles_managed do | profiles_managed_fields|
+                                        =profiles_managed_fields.label :"#{each_field['id']}", "Parent relationship"
+                                        =profiles_managed_fields.select :"#{each_field['id']}", options_for_select([[''],['Father','Father'],['Mother','Mother'],['Step-father','Step-father'],['Step-mother','Step-mother'],['Grandmother','Grandmother'],['Grandfather','Grandfather'],['Other','Other']])
+
+                                -elsif each_field['type'] == 'textarea'
+                                  = parent_fields.text_area :"#{each_field['id']}", :type => each_field['type']
+                                -elsif each_field['type'] == 'phone'                                
+                                  - parent.phone_numbers.each_with_index do |phone_number, index|
+                                    = parent_fields.fields_for "phone_numbers[]", phone_number do | phone_number_fields|                                     
+                                      =phone_number_fields.text_field :contact, :value => "#{@parents_details.split(',')[8] unless @parents_details.nil?}"                         
+                                      =phone_number_fields.select :type, options_for_select([['Mobile','Mobile'],['Home','Home'],['Work','Work']], :selected =>"#{@parents_details.split(',')[9] unless @parents_details.nil?}")                 
+
+                                -else
+                                  = parent_fields.text_field :"#{each_field['id']}", :type => each_field['type']
+                                  %br
+                                  %br 
+
+                                  %span.pointer.delRow
+                        - if each_panel['fieldgroup']['multiply_default'] > 2
+                          %tr
+                            %td
+                              %span.pointer.addRow #{each_panel['fieldgroup']['multiply_link']}                        
+                              
+              -else
+                -unless each_panel['field'].nil?               
+                  -each_panel['field'].each do |each_field|
+                    = each_field.inspect
+                    %label #{each_field['name']}
+                    -if each_field['type'] == 'select'                   
+                      = kids_fields.select :"#{each_field['id']}", options_for_select(each_field['selection_list']), :type => each_field['type'], :include_blank => true                 
+                    -elsif each_field['type'] == 'textarea'
+                      = kids_fields.text_area :"#{each_field['id']}", :type => each_field['type']
+                    -elsif each_field['type'] == 'date'
+                      = kids_fields.text_field :"#{each_field['id']}" 
+                    -else
+                      = kids_fields.text_field :"#{each_field['id']}", :type => each_field['type']
+
+          -if each_panel['name'] == 'Enrollment'
+            =hidden_field_tag :season_year, "#{session[:season_year]}", :readonly => true
+
+            -unless each_panel['field'].nil?               
+              -each_panel['field'].each do |each_field|
+                = each_field.inspect
+                %label #{each_field['name']}
+                -if each_field['type'] == 'select'                   
+                  =select_tag :"#{each_field['id']}", options_for_select(each_field['selection_list']), :type => each_field['type'], :include_blank => true
+ 
+      = f.submit 'continue'
